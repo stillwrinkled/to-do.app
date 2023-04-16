@@ -1,7 +1,7 @@
 # from functions import get_todos, write_todos
 from modules import functions
 import time
-
+print("This is a to-do app.")
 now = time.strftime('%d/%b/%Y %H:%M:%S')
 print("It is", now)
 todos = []
