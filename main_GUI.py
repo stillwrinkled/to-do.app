@@ -10,7 +10,7 @@ edit_button = sg.Button("Edit")
 
 window = sg.Window('My To-Do App',
                    layout=[[label], [input_box, add_button], [list_box, edit_button]],
-                   font=('Helvetica', 20))
+                   font=('Ariel', 20))
 while True:
     event, values = window.read()
     print("Event: ", event)
