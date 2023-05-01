@@ -1,7 +1,8 @@
 get ice cold water
 buy vitamins
-set alarm
-get carb
+remove alarm
+someitem
+get protein shake
 buy watermelon
 get new clothes
 get new clothes

@@ -1,5 +1,9 @@
 from modules import functions
 import PySimpleGUI as sg
+import time
+
+sg.theme("TealMono")
+clock = sg.Text("", key='clock', font=("Ariel", 10), text_color="grey")
 
 label = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter todo: ", key="todo")
@@ -11,15 +15,13 @@ complete_button = sg.Button("Complete")
 exit_button = sg.Button("Exit")
 error_message = sg.Text("", size=(30, 1), text_color="red", key="error_message")
 
-layout = [[label], [input_box, add_button], [list_box], [edit_button, complete_button, exit_button], [error_message]]
+layout = [[clock],[label],[input_box, add_button], [list_box], [edit_button, complete_button, exit_button]]
 
 window = sg.Window('My To-Do App', layout, font=('Ariel', 20))
 
 while True:
-    event, values = window.read()
-    print("Event: ", event)
-    print("Values: ", values)
-    print(values['todos'])
+    event, values = window.read(timeout=10)
+    window["clock"].update(time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case 'Add':
             todos = functions.get_todos()
@@ -36,27 +38,25 @@ while True:
                 todos[index] = new_todo + "\n"
                 functions.write_todos(todos)
                 window['todos'].update(values=todos)
-                window['error_message'].update("")
                 print(index)
             except IndexError:
-                error_text = "Select a To-do item first"
-                window['error_message'].update(error_text)
-                print("An IndexError occurred. Please make sure you selected a todo item.")
-
-                # todos = functions.get_todos()
-                # todos.append(new_todo)
+                error_text = "Select a to-do item first > type in a new to-do and click \'Edit\'"
+                sg.popup(error_text, font=('Ariel', 18))
         case 'Complete':
-            completed_task = values['todos'][0]
-            todos = functions.get_todos()
-            index = todos.index(completed_task)
-            todos.pop(index)
-            functions.write_todos(todos)
-            window['todos'].update(todos)
-            window['todo'].update("")
+            try:
+                completed_task = values['todos'][0]
+                todos = functions.get_todos()
+                index = todos.index(completed_task)
+                todos.pop(index)
+                functions.write_todos(todos)
+                window['todos'].update(todos)
+                window['todo'].update("")
+            except IndexError:
+                error_text = "Select a to-do item first & click \'Complete\'"
+                sg.popup(error_text, font=('Ariel', 18))
 
         case 'todos':
             value_to_show = values['todos'][0]
-            print(value_to_show)
             window['todo'].update(value_to_show)
 
         case 'Exit':
